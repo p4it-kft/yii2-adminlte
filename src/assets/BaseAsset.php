@@ -7,21 +7,21 @@ use yii\bootstrap4\BootstrapPluginAsset;
 use yii\web\AssetBundle;
 use yii\web\YiiAsset;
 
-class AdminLteAsset extends AssetBundle
+class BaseAsset extends AssetBundle
 {
-    public $sourcePath = __DIR__.'/adminLte';
+    public $sourcePath = '@vendor/almasaeed2010/adminlte/dist';
 
     public $css = [
-        'css/fix.css'
+        'css/adminlte.min.css'
     ];
 
     public $js = [
-        'js/pjax-timeout.js',
+        'js/adminlte.min.js'
     ];
 
     public $depends = [
-       SweetAlertAsset::class,
-       ToastrAsset::class,
-       BaseAsset::class
+        YiiAsset::class,
+        BootstrapAsset::class,
+        BootstrapPluginAsset::class
     ];
 }

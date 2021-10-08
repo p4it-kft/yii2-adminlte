@@ -1,9 +1,9 @@
 <?php
-namespace pappco\yii2\adminlte\widgets;
+namespace p4it\adminlte\widgets\actionArea;
 
 use Yii;
 use yii\base\Widget;
-use yii\bootstrap\Html;
+use yii\bootstrap4\Html;
 use yii\helpers\Url;
 
 class ActionArea extends Widget{
@@ -37,7 +37,7 @@ class ActionArea extends Widget{
      */
     public $buttons = [];
 
-    public $itemTemplate = '<a href="{href}" class="btn {buttonClass} {buttonSize} {addClass}" id="{id}"{attr}>{icon}{label}</a> ';
+    public $itemTemplate = '<a href="{href}" class="btn {buttonClass} {buttonSize} {addClass}" id="{id}" {attr}>{icon}{label}</a> ';
     public $itemWidgetTemplate = '{widget}';
 
     public function init(){
@@ -117,8 +117,9 @@ class ActionArea extends Widget{
     }
 
     private function renderItem($item){
-        if(!is_array($item))
+        if(!is_array($item)) {
             return $item;
+        }
 
         $replace = [
             '{href}' => $item['href'],

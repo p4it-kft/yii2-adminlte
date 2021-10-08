@@ -1,6 +1,6 @@
 <?php
 
-namespace p4it\yii2\adminlte;
+namespace p4it\adminlte;
 
 use yii\base\Application;
 use yii\base\BootstrapInterface;

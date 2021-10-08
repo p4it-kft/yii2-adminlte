@@ -1,14 +1,9 @@
 <?php
-/**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
- */
 
-namespace pappco\yii2\adminlte\widgets;
+namespace p4it\adminlte\widgets\alert;
 
-use yii\bootstrap\Widget;
-use yii\bootstrap\Alert as BootstrapAlert;
+use yii\bootstrap4\Widget;
+use yii\bootstrap4\Alert as BootstrapAlert;
 
 class Alert extends Widget
 {
