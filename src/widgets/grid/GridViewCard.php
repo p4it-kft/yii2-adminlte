@@ -42,7 +42,7 @@ class GridViewCard extends GridView
     public string $filtersView = '@vendor/p4it-kft/yii2-adminlte/src/widgets/grid/views/filters';
     public string $layoutView = '@vendor/p4it-kft/yii2-adminlte/src/widgets/grid/views/layout';
 
-    public function __construct(View $view, $config = [])
+    public function __construct($config = [])
     {
         parent::__construct($config);
     }
