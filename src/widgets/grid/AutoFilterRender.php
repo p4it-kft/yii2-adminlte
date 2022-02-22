@@ -95,7 +95,7 @@ class AutoFilterRender extends BaseObject
         if ($column instanceof \yii\grid\DataColumn) {
             $config['filter'] = $column->filter;
             $config['format'] = $column->format;
-            $config['filterInputOptions'] = $column->filterInputOptions;
+            $config['filterInputOptions'] = ArrayHelper::merge(['data-test' => 'filter-input-'.Html::getInputId($column->grid->filterModel, $column->filterAttribute)],$column->filterInputOptions);
             $config['attribute'] = $column->attribute;
         }
 
