@@ -9,6 +9,7 @@ use kartik\grid\GridView;
 use yii\base\BaseObject;
 use yii\base\Model;
 use yii\grid\Column;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
 /**
