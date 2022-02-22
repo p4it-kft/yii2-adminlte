@@ -114,7 +114,7 @@ class GridViewCard extends GridView
             ]);
         } else {
             $cardOptions = $this->cardOptions;
-            $cardOptions['body'] = $this->emptyText;
+            $cardOptions['body'] = $this->renderEmpty();
 
             $this->layout = $this->render($this->emptyLayoutView, [
                 'cardOptions' => $cardOptions,
