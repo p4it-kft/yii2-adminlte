@@ -17,7 +17,7 @@ class AdminLteBootstrap implements BootstrapInterface
     {
         \Yii::$container->set(\kartik\select2\Select2::class,
             [
-                'theme' => 'default',
+                'theme' => 'bootstrap',
                 'defaultPluginOptions' => [
                     'allowClear' => true,
                     'placeholder' => '...',
@@ -25,7 +25,7 @@ class AdminLteBootstrap implements BootstrapInterface
             ]);
         \Yii::$container->set(\pappco\yii2\widgets\select2\Select2::class,
             [
-                'theme' => 'default',
+                'theme' => 'bootstrap',
                 'defaultPluginOptions' => [
                     'allowClear' => true,
                     'placeholder' => '...',
