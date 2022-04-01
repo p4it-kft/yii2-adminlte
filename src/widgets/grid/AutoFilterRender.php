@@ -103,7 +103,7 @@ class AutoFilterRender extends BaseObject
                 $config['filterInputOptions'] = $column->filterInputOptions;
             }
             
-            $config['attribute'] = $column->attribute;
+            $config['attribute'] = $column->filterAttribute??$column->attribute;
         }
 
         return new static($config);
