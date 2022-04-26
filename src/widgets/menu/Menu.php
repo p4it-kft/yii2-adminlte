@@ -1,11 +1,10 @@
 <?php
 namespace p4it\adminlte\widgets\menu;
 
-use Illuminate\Support\Arr;
-use pappco\yii2\helpers\Url;
-use Yii;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\helpers\StringHelper;
+use yii\helpers\Url;
 
 /**
  * Class Menu
@@ -64,6 +63,8 @@ class Menu extends \yii\widgets\Menu {
     public string $iconDefault = 'circle';
 
     public string $iconStyleDefault = 'fas';
+    
+    public const EVENT_PREPARE_ITEM = 'prepareItem';
 
     /**
      * @inheritdoc
@@ -93,6 +94,8 @@ class Menu extends \yii\widgets\Menu {
         foreach ($keys as $key) {
             $this->prepareItems($items, $key);
         }
+
+        $item = $this->setItemVisiblityBasedOnSubItems($items);
 
         $this->items = array_values($items);
 
@@ -188,56 +191,25 @@ class Menu extends \yii\widgets\Menu {
      */
     protected function prepareItems(array &$items, $key): void
     {
-        $this->replaceAtInItems($items[$key]);
+        $items[$key] = $this->prepareItem($items[$key]);
+
         $this->fixSubItems($items[$key]);
         $this->fixFaIcons($items[$key]);
-
+        
         if (isset($items[$key]['items'])) {
             $subKeys = array_keys($items[$key]['items']);
             foreach ($subKeys as $subKey) {
                 $this->prepareItems($items[$key]['items'], $subKey);
             }
         }
-
-        if (!$this->isAllowed($items[$key])) {
-            $items[$key]['visible'] = false;
-        }
     }
+    
+    protected function prepareItem($item) {
+        $event = new PrepareItemEvent(['item' => $item]);
 
-    /**
-     * @param $item
-     * @return mixed
-     */
-    protected function isAllowed($item) {
-        $url = Arr::get($item, 'url');
-
-        if (
-            $url === null ||
-            $url === '#' ||
-            (is_array($url) && isset($url[0]) && $url[0] === '#')
-        ) {
-            return true;
-        }
-
-        //fixme callback! -> set visibility
-        return (bool)Url::to($url);
-    }
-
-    /**
-     * @param $item
-     */
-    protected function replaceAtInItems(&$item) {
-        if (is_string($item) && str_starts_with($item, '@')) {
-            $key = ltrim($item, '@');
-
-            $module = Yii::$app->getModules()[$key]??null;
-            if(is_array($module) && isset($module['class'])) {
-                $module = $module['class'];
-            }
-            if(method_exists($module, 'getMenuData')) {
-                $item = $module::getMenuData();
-            }
-        }
+        $this->trigger(self::EVENT_PREPARE_ITEM, $event);
+        
+        return $event->item;
     }
 
     /**
@@ -245,7 +217,7 @@ class Menu extends \yii\widgets\Menu {
      */
     protected function fixFaIcons(&$item) {
         if(isset($item['icon'])) {
-            $item['icon'] = str_replace('fa-','',$item['icon']);
+            $item['icon'] = str_replace(['fa-', 'fas-', 'far-', 'fal-', 'fad-', 'fab-'],['', '', '', '', '', ''],$item['icon']);
         }
     }
 
@@ -257,5 +229,63 @@ class Menu extends \yii\widgets\Menu {
             $item['items'] = $item['subItems'];
             unset($item['subItems']);
         }
+    }
+
+    /**
+     * @param array $items
+     * @return array|mixed
+     */
+    protected function setItemVisiblityBasedOnSubItems(array $items)
+    {
+        foreach ($items as &$item) {
+            if (isset($item['visible'])) {
+                continue;
+            }
+
+            if (isset($item['url'])) {
+                continue;
+            }
+
+            if (!isset($item['items'])) {
+                continue;
+            }
+
+            $visible = $this->hasVisibleItems($item['items']);
+
+            $item['visible'] = $visible;
+        }
+        return $item;
+    }
+
+    protected function isItemActive($item) {
+        if ($activePattern = ArrayHelper::getValue($item, 'activePattern')) {
+            return StringHelper::matchWildcard($activePattern, \Yii::$app->controller->getRoute());
+        }
+
+        return parent::isItemActive($item);
+    }
+
+    /**
+     * only for 2 levels
+     *
+     * @param $items
+     * @return bool
+     */
+    protected function hasVisibleItems($items): bool
+    {
+        foreach ($items as $item) {
+            if (!isset($item['items'])) {
+                continue;
+            }
+
+            if((bool)array_filter(ArrayHelper::getColumn($item['items'], 'visible'), fn($value) => $value === true || $value === null)) {
+                return true;
+            }
+        }
+
+        $itemsVisiblity = ArrayHelper::getColumn($items, 'visible');
+        $visible = (bool)array_filter($itemsVisiblity, fn($value) => $value === true || $value === null);
+
+        return $visible;
     }
 }
