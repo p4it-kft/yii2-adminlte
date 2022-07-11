@@ -92,11 +92,28 @@ HTML;
             'headerContainerAttributes' => Html::renderTagAttributes($this->headerOptions),
             'bodyContainerAttributes' => Html::renderTagAttributes($this->bodyOptions),
             'title' => $this->title,
-            'tools' => $this->tools,
+            'tools' => $this->renderTools(),
             'body' => $this->body,
             'footer' => $this->footer,
             'footers' => $footers,
             'header' => $this->header,
         ]);
+    }
+
+    public function renderTools() {
+        if(!$this->tools) {
+            return [];
+        }
+
+        $actionButtons = array_map(static function ($button){
+            if(isset($button['class']) && is_subclass_of($button['class'], \yii\base\Widget::class)) {
+                Html::addCssClass($button['options'], 'btn-xs');
+                $button = $button['class']::widget($button);
+            }
+
+            return $button;
+        }, $this->tools);
+
+        return $actionButtons;
     }
 }
