@@ -63,6 +63,8 @@ class Menu extends \yii\widgets\Menu {
     public string $iconDefault = 'circle';
 
     public string $iconStyleDefault = 'fas';
+
+    public bool $guessActivePattern = true;
     
     public const EVENT_PREPARE_ITEM = 'prepareItem';
 
@@ -258,7 +260,7 @@ class Menu extends \yii\widgets\Menu {
     }
 
     protected function isItemActive($item) {
-        if ($activePattern = ArrayHelper::getValue($item, 'activePattern')) {
+        if ($activePattern = ArrayHelper::getValue($item, 'activePattern', $this->guessActivePattern($item))) {
             return StringHelper::matchWildcard($activePattern, \Yii::$app->controller->getRoute());
         }
 
@@ -287,5 +289,21 @@ class Menu extends \yii\widgets\Menu {
         $visible = (bool)array_filter($itemsVisiblity, fn($value) => $value === true || $value === null);
 
         return $visible;
+    }
+
+    protected function guessActivePattern(array $item)
+    {
+        if($this->guessActivePattern === false) {
+            return null;
+        }
+
+        $url = $item['url'][0]??null;
+        if($url === null) {
+            return null;
+        }
+
+        $parts = StringHelper::explode($url,'/','/', true);
+        array_pop($parts);
+        return implode('/',$parts).'*';
     }
 }
