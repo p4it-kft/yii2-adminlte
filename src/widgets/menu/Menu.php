@@ -261,7 +261,7 @@ class Menu extends \yii\widgets\Menu {
 
     protected function isItemActive($item) {
         if ($activePattern = ArrayHelper::getValue($item, 'activePattern', $this->guessActivePattern($item))) {
-            return StringHelper::matchWildcard($activePattern, \Yii::$app->controller->getRoute() || StringHelper::matchWildcard($activePattern, \Yii::$app->request->get('r'));
+            return StringHelper::matchWildcard($activePattern, \Yii::$app->controller->getRoute() || StringHelper::matchWildcard($activePattern, \Yii::$app->request->get('r')));
         }
 
         return parent::isItemActive($item);
