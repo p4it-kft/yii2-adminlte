@@ -3,6 +3,7 @@
 namespace p4it\adminlte\widgets\toastr;
 
 use yii\bootstrap4\Widget;
+use yii\helpers\Json;
 
 class Toastr extends Widget
 {
@@ -17,12 +18,13 @@ class Toastr extends Widget
 
         $session = \Yii::$app->getSession();
         $flashes = $session->getAllFlashes();
+        $options = Json::htmlEncode($this->clientOptions);
 
         foreach ($flashes as $type => $data) {
             $data = (array)$data;
             foreach ($data as $message) {
                 $this->view->registerJs(<<<JS
-toastr['$type']('$message');
+toastr['$type']('$message', null, $options);
 JS
                 );
             }
