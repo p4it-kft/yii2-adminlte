@@ -23,8 +23,9 @@ class Toastr extends Widget
         foreach ($flashes as $type => $data) {
             $data = (array)$data;
             foreach ($data as $message) {
+                $message = Json::htmlEncode($message);
                 $this->view->registerJs(<<<JS
-toastr['$type']('$message', null, $options);
+toastr['$type']($message, null, $options);
 JS
                 );
             }
