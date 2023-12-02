@@ -12,8 +12,10 @@ class ActionArea extends Widget{
      * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $options = ['class' => 'title-action'];
+    public $itemOptions = [];
 
     public $containerTag = 'div';
+    public $itemContainerTag = null;
 
     /**
      * @var array of string and/or button configuration arrays to appear in the action area. If this property is empty,
@@ -106,9 +108,14 @@ class ActionArea extends Widget{
     public function run(){
         $html = '';
         foreach($this->buttons as $btn){
-            $html .= $this->renderItem($btn).' ';
+            $item = $this->renderItem($btn);
+            if($this->itemContainerTag) {
+                $html .= Html::tag($this->itemContainerTag, $item, $this->itemOptions);
+            } else {
+                $html .= $this->renderItem($btn).' ';
+            }
         }
-        
+
         if(!$this->containerTag) {
             return $html;
         }
