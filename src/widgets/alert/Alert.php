@@ -34,7 +34,7 @@ class Alert extends Widget
         ],
         'warning' => [
             'class' => 'alert-warning',
-            'icon' => '<i class="icon fa fa-warning"></i>',
+            'icon' => '<i class="icon fa fa-exclamation-triangle"></i>',
         ],
     ];
 
