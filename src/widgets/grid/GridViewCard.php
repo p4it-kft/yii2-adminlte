@@ -119,6 +119,7 @@ class GridViewCard extends GridView
             $this->layout = $this->render($this->emptyLayoutView, [
                 'cardOptions' => $cardOptions,
                 'actionButtons' => $this->renderActionButtons(),
+                'filters' => $filters
             ]);
         }
 
